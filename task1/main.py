@@ -191,7 +191,7 @@ def get_args_from_command_line():
     return parser.parse_args()
 
 
-def get_sp_get_movies_params(args_namespace):
+def get_sp_get_params(args_namespace):
     """
     process args from command line to execute saved procedure
     :param args_namespace: namespace with args from command line
@@ -239,7 +239,7 @@ def main():
     :return: none
     """
     args_namespace = get_args_from_command_line()
-    params = get_sp_get_movies_params(args_namespace)
+    params = get_sp_get_params(args_namespace)
     setup_db()
     student_json = params[0]
     room_json = params[1]
@@ -247,7 +247,7 @@ def main():
     insert_students_to_db(parse_student_json_to_list(student_json))
     user_format = params[2]
     if user_format == 'xml':
-        return #to do
+        return  # to do
     else:
         print_json_output()
     return
