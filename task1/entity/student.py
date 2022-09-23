@@ -1,3 +1,6 @@
+from json import JSONEncoder
+
+
 class Student:
     def __init__(self, birthday_, id_, name_, room_, sex_):
         self.__id = id_
@@ -50,6 +53,7 @@ class Student:
     def sex(self, sex_):
         self.__sex = sex_
 
-    def __str__(self) -> str:
-        return super().__str__()
 
+class StudentJSONEncoder(JSONEncoder):
+    def default(self, obj):
+        return obj.__dict__

@@ -1,3 +1,6 @@
+from json import JSONEncoder
+
+
 class Room:
     def __init__(self, id_, name_):
         self.__id = id_
@@ -20,3 +23,6 @@ class Room:
         self.__name = name_
 
 
+class RoomJSONEncoder(JSONEncoder):
+    def default(self, obj):
+        return obj.__dict__
