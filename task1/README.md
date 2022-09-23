@@ -1,4 +1,4 @@
-# Console utility to convert csv to parquet, parquet to csv, get schema of parquet file
+# Console utility to find top rooms by criteria
 
 *usage* python3 main.py [OPTION] [FILENAME] [OPTION] [FILENAME] [OPTION] [FORMAT]
 
