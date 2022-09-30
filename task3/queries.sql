@@ -24,7 +24,6 @@ group by category.name order by amount_ desc limit 1
 select film.title from film 
 left join inventory on film.film_id = inventory.film_id 
 where inventory.inventory_id isnull 
-group by film.title
 
 
 
@@ -37,7 +36,7 @@ join film_category on film_category.film_id = film_actor.film_id
 join category on category.category_id = film_category.category_id
 where category.name = 'Children'
 GROUP by actor.actor_id) as tmp 
-where tmp.rank_count<3
+where tmp.rank_count<=3
 
 
 
