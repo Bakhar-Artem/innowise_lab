@@ -1,0 +1,47 @@
+1.create view with aggregation group
+group
+{
+  _id: {content:"$content"},
+  counter: {
+    $count: {}
+  }
+}
+on this view sort
+{
+  counter: -1
+}
+{limit:5}
+
+
+2. create view with aggregation $addField:{
+  length: {$strLenCP: '$content'}
+}
+find({length:{$lt:5}})
+
+
+3.
+create view with aggregation $addField
+{
+  date:
+  {$dateFromString:{
+    dateString: "$at",
+    format: "%Y-%m-%d %H:%M:%S"
+  }} 
+}
+on this view create view with
+$set
+{
+   date: {
+         $dateFromParts: { 
+           year: {$year: "$date"}, 
+           month: {$month: "$date"}, 
+           day: {$dayOfMonth: "$date"}
+         }
+      }
+}
+$group{
+  _id: "$date",
+  avg: {
+    $avg: "$score"
+  }
+}
