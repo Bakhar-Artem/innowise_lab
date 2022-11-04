@@ -12,7 +12,7 @@ to start program run **docker compose up**
 2. append your rule class to rules list at *process_csv()* method(*main.py*)
 
 ### Used technologies
-- python
+- python3
   - pandas
   - watchdog
 - docker 
