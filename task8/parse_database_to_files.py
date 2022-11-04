@@ -6,7 +6,7 @@ years = [x for x in range(2016, 2021)]
 months = [x for x in range(1, 13)]
 
 
-def parse_to_years(path):
+def parse_database(path):
     chunksize = 10 ** 5
     for chunk in pd.read_csv(path, chunksize=chunksize):
         chunk['departure'] = pd.to_datetime(chunk['departure'])
