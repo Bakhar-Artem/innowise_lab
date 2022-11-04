@@ -26,4 +26,4 @@ def parse_database(path):
 
 
 if __name__ == '__main__':
-    parse_to_years('data/database.csv')
+    parse_database('data/database.csv')
