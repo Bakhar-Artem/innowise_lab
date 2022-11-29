@@ -22,22 +22,6 @@ S3_KEY = config['AWS']['S3_KEY']
 S3_SECRET = config['AWS']['S3_SECRET']
 
 with DAG('s3', start_date=datetime(2022, 11, 20)) as dag:
-    def init_bucket():
-        """
-        initialise bucket
-        :return: none
-        """
-        s3_client = boto3.client(
-            service_name='s3',
-            region_name=AWS_REGION,
-            endpoint_url=ENDPOINT_URL,
-            aws_access_key_id=S3_KEY,
-            aws_secret_access_key=S3_SECRET,
-            verify=False
-        )
-        response = s3_client.create_bucket(Bucket=BUCKET_NAME)
-
-
     def get_files_path():
         """
         method to get full csv paths
@@ -66,7 +50,8 @@ with DAG('s3', start_date=datetime(2022, 11, 20)) as dag:
             for csv_path in get_files_path():
                 try:
                     path = str(csv_path).split('/')
-                    s3_client.upload_file(str(csv_path), BUCKET_NAME, path[6])
+                    file_prefix = path[6].split('.')[0]
+                    s3_client.upload_file(str(csv_path), BUCKET_NAME, file_prefix + '/main.csv')
                 except ClientError as e:
                     print(e.response)
 
@@ -111,7 +96,8 @@ with DAG('s3', start_date=datetime(2022, 11, 20)) as dag:
                 df.toPandas().to_csv(csv_buffer, index=False)
 
                 path = str(csv_path).split('/')
-                get_s3_cred().Object(BUCKET_NAME, 'departure/' + path[6]).put(Body=csv_buffer.getvalue())
+                file_prefix = path[6].split('.')[0]
+                get_s3_cred().Object(BUCKET_NAME, file_prefix + '/departure.csv').put(Body=csv_buffer.getvalue())
 
 
         def upload_return_to_s3():
@@ -127,7 +113,8 @@ with DAG('s3', start_date=datetime(2022, 11, 20)) as dag:
                 csv_buffer = StringIO()
                 df.toPandas().to_csv(csv_buffer, index=False)
                 path = str(csv_path).split('/')
-                get_s3_cred().Object(BUCKET_NAME, 'return/' + path[6]).put(Body=csv_buffer.getvalue())
+                file_prefix = path[6].split('.')[0]
+                get_s3_cred().Object(BUCKET_NAME, file_prefix + '/return.csv').put(Body=csv_buffer.getvalue())
 
 
         # PythonOperators for TaskGroup
@@ -135,8 +122,3 @@ with DAG('s3', start_date=datetime(2022, 11, 20)) as dag:
         upload_files_departure_task = PythonOperator(task_id='upload_metrics_departure',
                                                      python_callable=upload_departure_to_s3)
         upload_files_return_task = PythonOperator(task_id='upload_metrics_return', python_callable=upload_return_to_s3)
-
-    # PythonOperator for init bucket
-    init_bucket_task = PythonOperator(task_id='init_bucket', python_callable=init_bucket)
-    # dependencies
-    init_bucket_task >> upload_task
