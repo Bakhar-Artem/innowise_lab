@@ -12,7 +12,7 @@ from airflow.utils.task_group import TaskGroup
 from botocore.exceptions import ClientError
 from pyspark.sql import SparkSession
 
-# Credits to connect to aws
+# Credits to connect to aws(localstack)
 config = configparser.ConfigParser()
 config.read('/home/user/airflow/dags/s3.env')
 AWS_REGION = config['AWS']['AWS_REGION']
